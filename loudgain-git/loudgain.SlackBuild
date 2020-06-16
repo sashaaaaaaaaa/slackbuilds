@@ -22,7 +22,6 @@
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 PRGNAM=loudgain
-VERSION=${VERSION:-0.6.8}
 BUILD=${BUILD:-1}
 TAG=${TAG:-sa}
 
@@ -42,6 +41,8 @@ cd $TMP
 rm -rf $PRGNAM
 git clone https://github.com/Moonbase59/loudgain.git
 cd $PRGNAM
+VERSION=$(echo -n "git" ; git --no-pager log -1 --date=format:"%Y%m%d" --format="%ad")
+git --no-pager log -1 --date=format:"%Y%m%d" --format="%ad"
 chown -R root:root .
 find -L . \
  \( -perm 777 -o -perm 775 -o -perm 750 -o -perm 711 -o -perm 555 \
@@ -95,7 +96,7 @@ if [ "$BOTH" = "yes" ] && [ "$ARCH" = "x86_64" ]; then
         cp bin/loudgain.static $PKG/usr/bin
 fi
 
-fi
+fi # End of "if [ "$STATIC" = "yes" ]; then" else
 
 find $PKG -print0 | xargs -0 file | grep -e "executable" -e "shared object" | grep ELF \
     | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
