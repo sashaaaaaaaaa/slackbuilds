@@ -7,7 +7,20 @@ modify the actual audio data.
 rgbpm is an included bash script to invoke loudgain (and a BPM scanner)
 and have it scan album folders, starting from a top folder, recursively.
 
-NOTE: The version of taglib (which loudgain uses) included in Slackware
-has a bug that possibly corrupts Ogg Vorbis files. Installing v1.12-beta-1
-or the newest development version is recommended, found here:
-https://github.com/taglib/taglib
+NOTE: Stable releases of taglib (which loudgain uses) have an issue 
+about possibly corrupting Ogg Vorbis files upon writing them. 
+Temporarily a provided 64-bit binary 'loudgain.static' can be used to 
+safely tag Ogg Vorbis files. 
+
+By default both loudgain and loudgain.static are included, 
+but loudgain.static can be optionally left out by setting 
+the following:
+
+BOTH=no
+
+You can choose to install the loudgain.static version only and link it 
+to 'loudgain' with this option:
+
+STATIC=yes
+
+Note that the loudgain.static binary starts much slower.
