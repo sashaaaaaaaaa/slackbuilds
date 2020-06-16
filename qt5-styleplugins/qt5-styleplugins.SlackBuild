@@ -75,6 +75,9 @@ find -L . \
 # Force linking against Qt5DBus or build will fail
 sed -i "s|2.0$|2.0 Qt5DBus|" src/plugins/platformthemes/gtk2/gtk2.pro
 
+cat $CWD/0001-fix-build-against-Qt-5.15.patch | patch -p1 || exit
+cat $CWD/0002-fix-gtk2-background.patch | patch -p1 || exit
+
 QMAKE_CFLAGS_RELEASE="$SLKCFLAGS" \
 QMAKE_CXXFLAGS_RELEASE="$SLKCFLAGS" \
 PREFIX=/usr \
