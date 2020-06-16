@@ -12,8 +12,8 @@ about possibly corrupting Ogg Vorbis files upon writing them.
 Temporarily a provided 64-bit binary 'loudgain.static' can be used to 
 safely tag Ogg Vorbis files. 
 
-By default both loudgain and loudgain.static are included, 
-but loudgain.static can be optionally left out by setting 
+On a 64-bit system by default both loudgain and loudgain.static are
+included, but loudgain.static can be optionally left out by setting 
 the following:
 
 BOTH=no
