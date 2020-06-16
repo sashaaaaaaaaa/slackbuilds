@@ -28,3 +28,5 @@ Note that the loudgain.static binary starts much slower.
 Alternatively you can install taglib-1-12-beta-1 (This repository has a
 slackbuild for that too) or the latest development version from 
 https://github.com/taglib/taglib
+
+NOTE 2: For Slackware-current you should comment out line 85
