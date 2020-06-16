@@ -24,3 +24,7 @@ to 'loudgain' with this option:
 STATIC=yes
 
 Note that the loudgain.static binary starts much slower.
+
+Alternatively you can install taglib-1-12-beta-1 (I have a slackbuild
+for that too) or the latest development version from 
+https://github.com/taglib/taglib
