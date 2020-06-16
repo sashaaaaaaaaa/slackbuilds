@@ -91,7 +91,7 @@ make
 make install DESTDIR=$PKG
 cd ..
 
-if [ "$BOTH" = "yes" && "$ARCH" = "x86_64" ]; then
+if [ "$BOTH" = "yes" ] && [ "$ARCH" = "x86_64" ]; then
         cp bin/loudgain.static $PKG/usr/bin
 fi
 
