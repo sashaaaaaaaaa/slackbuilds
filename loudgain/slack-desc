@@ -1,0 +1,18 @@
+# HOW TO EDIT THIS FILE:
+# The "handy ruler" below makes it easier to edit a package description.  Line
+# up the first '|' above the ':' following the base package name, and the '|' on
+# the right side marks the last column you can put a character in.  You must make
+# exactly 11 lines for the formatting to be correct.  It's also customary to
+# leave one space after the ':'.
+
+        |-----handy-ruler------------------------------------------------------|
+loudgain: loudgain (ReplayGain 2.0 loudness normalizer)
+loudgain: 
+loudgain: loudgain is a versatile ReplayGain 2.0 loudness normalizer, based on
+loudgain: the EBU R128/ITU BS.1770 standard (-18 LUFS) and supports FLAC/Ogg/
+loudgain: MP2/MP3/MP4/M4A/ALAC/Opus/ASF/WMA/WAV/WavPack/AIFF/APE audio files. 
+loudgain: It uses the well-known mp3gain commandline syntax but will never 
+loudgain: modify the actual audio data.
+loudgain: 
+loudgain: Website: https://github.com/Moonbase59/loudgain
+loudgain: 

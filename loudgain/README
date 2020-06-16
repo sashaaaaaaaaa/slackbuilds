@@ -1,0 +1,13 @@
+loudgain is a versatile ReplayGain 2.0 loudness normalizer, based
+the EBU R128/ITU BS.1770 standard (-18 LUFS) and supports FLAC/Ogg/
+/MP3/MP4/M4A/ALAC/Opus/ASF/WMA/WAV/WavPack/AIFF/APE audio files.
+It uses the well-known mp3gain commandline syntax but will never
+modify the actual audio data.
+
+rgbpm is an included bash script to invoke loudgain (and a BPM scanner)
+and have it scan album folders, starting from a top folder, recursively.
+
+NOTE: The version of taglib (which loudgain uses) included in Slackware
+has a bug that possibly corrupts Ogg Vorbis files. Installing v1.12-beta-1
+or the newest development version is recommended, found here:
+https://github.com/taglib/taglib
