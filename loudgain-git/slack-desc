@@ -7,11 +7,13 @@
 
         |-----handy-ruler------------------------------------------------------|
 loudgain: loudgain (ReplayGain 2.0 loudness normalizer)
-loudgain: 
-loudgain: loudgain is a loudness normalizer that scans music files and 
-loudgain: calculates loudness-normalized gain and loudness peak values according 
-loudgain: to the EBU R128 standard, and can optionally write 
+loudgain:
+loudgain: loudgain is a loudness normalizer that scans music files and
+loudgain: calculates loudness-normalized gain and loudness peak values according
+loudgain: to the EBU R128 standard, and can optionally write
 loudgain: ReplayGain-compatible metadata.
 loudgain:
 loudgain: Website: https://github.com/Moonbase59/loudgain
+loudgain:
+loudgain:
 loudgain:
