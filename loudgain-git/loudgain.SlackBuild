@@ -2,7 +2,7 @@
 
 # Slackware build script for loudgain
 
-# Copyright 2020 Sasha A. sashaa@disroot.org
+# Copyright 2020 Sasha Abbott sashaa@disroot.org
 #
 # Redistribution and use of this script, with or without modification, is
 # permitted provided that the following conditions are met:
@@ -22,8 +22,9 @@
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 PRGNAM=loudgain
+VERSION=${VERSION:-0.6.8}
 BUILD=${BUILD:-1}
-TAG=${TAG:-sa}
+TAG=${TAG:-_SBo}
 
 STATIC=${STATIC:-no}
 BOTH=${BOTH:-yes}
@@ -33,23 +34,6 @@ TMP=${TMP:-/tmp/SBo}
 PKG=$TMP/package-$PRGNAM
 OUTPUT=${OUTPUT:-/tmp}
 
-set -e
-
-rm -rf $PKG
-mkdir -p $TMP $PKG $OUTPUT
-cd $TMP
-rm -rf $PRGNAM
-git clone https://github.com/Moonbase59/loudgain.git
-cd $PRGNAM
-VERSION=$(echo -n "git" ; git --no-pager log -1 --date=format:"%Y%m%d" --format="%ad")
-git --no-pager log -1 --date=format:"%Y%m%d" --format="%ad"
-chown -R root:root .
-find -L . \
- \( -perm 777 -o -perm 775 -o -perm 750 -o -perm 711 -o -perm 555 \
-  -o -perm 511 \) -exec chmod 755 {} \; -o \
- \( -perm 666 -o -perm 664 -o -perm 640 -o -perm 600 -o -perm 444 \
- -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
-
 if [ -z "$ARCH" ]; then
   case "$( uname -m )" in
     i?86) ARCH=i586 ;;
@@ -58,7 +42,10 @@ if [ -z "$ARCH" ]; then
   esac
 fi
 
-if [ "$ARCH" = "i586" ]; then
+if [ ! "$ARCH" = "x86_64" ] && [ "$STATIC" = "yes" ]; then
+    echo "Static build will only work on x86_64 system."
+    exit 1
+elif [ "$ARCH" = "i586" ]; then
   SLKCFLAGS="-O2 -march=i586 -mtune=i686"
   LIBDIRSUFFIX=""
 elif [ "$ARCH" = "i686" ]; then
@@ -81,22 +68,41 @@ else
     LIBDIRSUFFIX=""
 fi
 
-sed -i 's,/share/man,/man,g' CMakeLists.txt
-#sed -i 's/removeFields/removeField/g' src/tag.cc # needed for taglib 1.10
+set -e
 
-mkdir -p build
-cd build
-cmake -DCMAKE_INSTALL_PREFIX=/usr ..
-make
-make install DESTDIR=$PKG
-cd ..
+rm -rf $PKG
+mkdir -p $TMP $PKG $OUTPUT
+cd $TMP
+rm -rf $PRGNAM
+git clone https://github.com/Moonbase59/loudgain.git
+cd $PRGNAM
+VERSION=$(echo -n "git" ; git --no-pager log -1 --date=format:"%Y%m%d" --format="%ad")
+git --no-pager log -1 --date=format:"%Y%m%d" --format="%ad"
+chown -R root:root .
+find -L . \
+ \( -perm 777 -o -perm 775 -o -perm 750 -o -perm 711 -o -perm 555 \
+  -o -perm 511 \) -exec chmod 755 {} \; -o \
+ \( -perm 666 -o -perm 664 -o -perm 640 -o -perm 600 -o -perm 444 \
+ -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
 
-if [ "$BOTH" = "yes" ] && [ "$ARCH" = "x86_64" ]; then
+if [ "$STATIC" = "no" ]; then
+    sed -i 's,/share/man,/man,g' CMakeLists.txt
+    sed -i 's/removeFields/removeField/g' src/tag.cc # needed for taglib 1.10
+
+    mkdir -p build
+    cd build
+    cmake -DCMAKE_INSTALL_PREFIX=/usr ..
+    make
+    make install DESTDIR=$PKG
+    cd ..
+
+    if [ "$BOTH" = "yes" ] && [ "$ARCH" = "x86_64" ]; then
         cp bin/loudgain.static $PKG/usr/bin
-fi
+    fi
 
-find $PKG -print0 | xargs -0 file | grep -e "executable" -e "shared object" | grep ELF \
-    | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
+    find $PKG -print0 | xargs -0 file | grep -e "executable" -e "shared object" | grep ELF \
+        | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
+fi
 
 find $PKG/usr/man -type f -exec gzip -9 {} \;
 for i in $( find $PKG/usr/man -type l ) ; do ln -s $( readlink $i ).gz $i.gz ; rm $i ; done
