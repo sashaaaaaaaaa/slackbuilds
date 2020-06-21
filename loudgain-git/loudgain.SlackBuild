@@ -85,8 +85,9 @@ find -L . \
 
 if [ "$STATIC" = "no" ]; then
     sed -i 's,/share/man,/man,g' CMakeLists.txt
-    sed -i 's/removeFields/removeField/g' src/tag.cc # needed for taglib 1.10
-
+    if [ cat /etc/slackware-version != "Slackware 14.2+" ]; then
+        sed -i 's/removeFields/removeField/g' src/tag.cc # needed for taglib 1.10
+        fi
     mkdir -p build
     cd build
     cmake -DCMAKE_INSTALL_PREFIX=/usr ..
