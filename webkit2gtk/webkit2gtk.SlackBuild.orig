@@ -1,8 +1,9 @@
 #!/bin/sh
-
-# Slackware build script for MenuLibre
-
-# Copyright 2020 Sasha Abbott sashaa@disroot.org
+#
+# Slackware build script for webkit2gtk
+#
+# Copyright 2016-2017 Willy Sudiarto Raharjo <willysr@slackbuilds.org>
+# All rights reserved.
 #
 # Redistribution and use of this script, with or without modification, is
 # permitted provided that the following conditions are met:
@@ -21,11 +22,16 @@
 #  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-PRGNAM=MenuLibre
-SRCNAM=menulibre
-VERSION=${VERSION:-2.2.1}
+PRGNAM=webkit2gtk
+SRCNAM=webkitgtk
+VERSION=${VERSION:-2.30.2}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_SBo}
+
+CWD=$(pwd)
+TMP=${TMP:-/tmp/SBo}
+PKG=$TMP/package-$PRGNAM
+OUTPUT=${OUTPUT:-/tmp}
 
 if [ -z "$ARCH" ]; then
   case "$( uname -m )" in
@@ -34,11 +40,6 @@ if [ -z "$ARCH" ]; then
        *) ARCH=$( uname -m ) ;;
   esac
 fi
-
-CWD=$(pwd)
-TMP=${TMP:-/tmp/SBo}
-PKG=$TMP/package-$PRGNAM
-OUTPUT=${OUTPUT:-/tmp}
 
 if [ "$ARCH" = "i586" ]; then
   SLKCFLAGS="-O2 -march=i586 -mtune=i686"
@@ -54,13 +55,17 @@ else
   LIBDIRSUFFIX=""
 fi
 
-set -e
+# This is needed to fix build issue on single make job
+# Thanks to ponce for investigating this issue.
+export MAKEFLAGS=${MAKEFLAGS:--j2}
+
+set -eu
 
 rm -rf $PKG
 mkdir -p $TMP $PKG $OUTPUT
 cd $TMP
 rm -rf $SRCNAM-$VERSION
-tar xvf $CWD/$SRCNAM-$VERSION.tar.gz
+tar xvf $CWD/$SRCNAM-$VERSION.tar.xz
 cd $SRCNAM-$VERSION
 chown -R root:root .
 find -L . \
@@ -69,16 +74,25 @@ find -L . \
  \( -perm 666 -o -perm 664 -o -perm 640 -o -perm 600 -o -perm 444 \
   -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
 
-python3 setup.py install --root=$PKG
+echo 'add_compile_definitions("U_DEFINE_FALSE_AND_TRUE=1")' >> Source/WTF/wtf/CMakeLists.txt
 
-mv $PKG/usr/share/man $PKG/usr/man
-find $PKG/usr/man -type f -exec gzip -9 {} \;
-for i in $( find $PKG/usr/man -type l ) ; do ln -s $( readlink $i ).gz $i.gz ; rm $i ; done
+mkdir -p build
+cd build
+  cmake -DPORT=GTK \
+	-DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_SKIP_RPATH=ON \
+	-DCMAKE_INSTALL_PREFIX=/usr \
+        -DLIB_INSTALL_DIR=/usr/lib${LIBDIRSUFFIX} \
+	-DLIBEXEC_INSTALL_DIR=/usr/lib${LIBDIRSUFFIX}/webkit2gtk-4.0 \
+        -DENABLE_MINIBROWSER=ON \
+        -DUSE_SYSTEMD=OFF \
+        ..
+make
+make install DESTDIR=$PKG
 
-mkdir -p $PKG/usr/doc/
-mv $PKG/usr/share/doc/$SRCNAM $PKG/usr/doc/$SRCNAM-$VERSION
-rmdir $PKG/usr/share/doc/
-cat $CWD/$PRGNAM.SlackBuild > $PKG/usr/doc/$SRCNAM-$VERSION/$PRGNAM.SlackBuild
+mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
+cp -a ../NEWS $PKG/usr/doc/$PRGNAM-$VERSION
+cat $CWD/$PRGNAM.SlackBuild > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
 
 mkdir -p $PKG/install
 cat $CWD/slack-desc > $PKG/install/slack-desc
