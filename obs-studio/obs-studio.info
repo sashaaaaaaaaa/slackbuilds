@@ -1,5 +1,5 @@
 PRGNAM="obs-studio"
-VERSION="25.0.8"
+VERSION="26.0.2"
 HOMEPAGE="https://obsproject.com/"
 DOWNLOAD="https://github.com/obsproject/obs-studio/archive/26.0.2/obs-studio-26.0.2.tar.gz"
 MD5SUM="75dea679867dce642c8d1910ef6da0a5"
